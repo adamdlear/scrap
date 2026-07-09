@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"slices"
@@ -9,6 +10,19 @@ import (
 
 	"golang.org/x/net/websocket"
 )
+
+func notesPage(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	tmpl, err := template.ParseFiles("./web/index.tmpl")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := map[string]string{
+		"Id": id,
+	}
+	tmpl.Execute(w, data)
+}
 
 func health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -32,8 +46,9 @@ func wsHandler(ws *websocket.Conn) {
 }
 
 func main() {
-	http.HandleFunc("/health", health)
+	http.HandleFunc("/notes/{id}", notesPage)
 	http.Handle("/ws", websocket.Handler(wsHandler))
+	http.HandleFunc("/health", health)
 
 	fmt.Println("Listening on port :8080")
 	http.ListenAndServe(":8080", nil)
