@@ -5,21 +5,34 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 
 	"golang.org/x/net/websocket"
 )
 
+type NotesPageData struct {
+	ID      string
+	Content template.HTML
+}
+
 func notesPage(w http.ResponseWriter, r *http.Request) {
+	content, err := os.ReadFile("./test-file.md")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	id := r.PathValue("id")
 	tmpl, err := template.ParseFiles("./web/index.tmpl")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	data := map[string]string{
-		"Id": id,
+	data := NotesPageData{
+		ID:      id,
+		Content: template.HTML(MDToHTML(content)),
 	}
 	tmpl.Execute(w, data)
 }
