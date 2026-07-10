@@ -1,3 +1,191 @@
-h1 {
-  color: red
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0d0d0d;
+  --surface: #141414;
+  --border: #222;
+  --text: #e2e2e2;
+  --text-muted: #666;
+  --accent: #7c6af7;
+  --accent-dim: #3d3560;
+  --code-bg: #1a1a1a;
+  --font: "JetBrains Mono", "Fira Code", "Cascadia Code", "Source Code Pro", ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: clamp(13px, 2.5vw, 15px);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(1.25rem, 5vw, 3rem) clamp(1rem, 4vw, 1.5rem);
+}
+
+.note {
+  width: 100%;
+  max-width: 720px;
+}
+
+.note-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Markdown content */
+.note-content h1,
+.note-content h2,
+.note-content h3,
+.note-content h4,
+.note-content h5,
+.note-content h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.note-content h1 { font-size: clamp(1.3rem, 4vw, 1.6rem); }
+.note-content h2 { font-size: clamp(1.1rem, 3.5vw, 1.3rem); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+.note-content h3 { font-size: clamp(1rem, 3vw, 1.1rem); }
+
+.note-content p {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.note-content a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+  transition: border-color 0.15s;
+}
+
+.note-content a:hover {
+  border-color: var(--accent);
+}
+
+.note-content code {
+  font-family: var(--font);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.15em 0.4em;
+  color: #c9b8ff;
+}
+
+.note-content pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+
+.note-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.note-content blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 1.25rem 0;
+  padding: 0.5rem 1.25rem;
+  color: var(--text-muted);
+}
+
+.note-content ul,
+.note-content ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.note-content li {
+  margin-bottom: 0.3rem;
+}
+
+.note-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.note-content .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.25rem;
+}
+
+.note-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 360px;
+}
+
+.note-content th,
+.note-content td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.note-content th {
+  background: var(--surface);
+  color: #fff;
+  font-weight: 600;
+}
+
+.note-content img {
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 480px) {
+  .note-meta {
+    margin-bottom: 1.5rem;
+  }
+
+  .note-content pre {
+    padding: 1rem;
+    border-radius: 4px;
+    /* allow horizontal scroll without clipping */
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+
+  .note-content blockquote {
+    padding: 0.4rem 0.75rem;
+  }
+
+  .note-content ul,
+  .note-content ol {
+    padding-left: 1.25rem;
+  }
 }
