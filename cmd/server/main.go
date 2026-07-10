@@ -1,9 +1,11 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"slices"
@@ -11,6 +13,12 @@ import (
 
 	"golang.org/x/net/websocket"
 )
+
+//go:embed web/static
+var staticFiles embed.FS
+
+//go:embed web/templates
+var templateFiles embed.FS
 
 type NotesPageData struct {
 	ID      string
@@ -25,7 +33,7 @@ func notesPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.PathValue("id")
-	tmpl, err := template.ParseFiles("./web/index.tmpl")
+	tmpl, err := template.ParseFS(templateFiles, "web/templates/index.tmpl")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -59,9 +67,15 @@ func wsHandler(ws *websocket.Conn) {
 }
 
 func main() {
+	staticFS, err := fs.Sub(staticFiles, "web/static")
+	if err != nil {
+		panic(err)
+	}
+
 	http.HandleFunc("/notes/{id}", notesPage)
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.HandleFunc("/health", health)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServerFS(staticFS)))
 
 	fmt.Println("Listening on port :8080")
 	http.ListenAndServe(":8080", nil)
